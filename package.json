@@ -7,7 +7,7 @@
     "create-cool-app": "index.js",
     "cca": "index.js"
   },
-  "file": [
+  "files": [
     "index.js",
     "template-*"
   ],
@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/kimozhang/create-cool-app/issues"
   },
-  "homepage": "https://github.com/kimozhang/create-cool-app#readme"
+  "homepage": "https://github.com/kimozhang/create-cool-app#readme",
+  "devDependencies": {
+    "fs-extra": "^9.0.1",
+    "minimist": "^1.2.5"
+  }
 }
