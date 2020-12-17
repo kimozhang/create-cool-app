@@ -1,0 +1,24 @@
+{
+  "name": "create-cool-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "create-cool-app": "index.js",
+    "cca": "index.js"
+  },
+  "file": [
+    "index.js",
+    "template-*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimozhang/create-cool-app.git"
+  },
+  "author": "KimoZhang <1193055507@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kimozhang/create-cool-app/issues"
+  },
+  "homepage": "https://github.com/kimozhang/create-cool-app#readme"
+}
