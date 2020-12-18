@@ -24,5 +24,8 @@
   "devDependencies": {
     "fs-extra": "^9.0.1",
     "minimist": "^1.2.5"
+  },
+  "dependencies": {
+    "enquirer": "^2.3.6"
   }
 }
