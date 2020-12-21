@@ -5,7 +5,7 @@ const { prompt } = require('enquirer')
 const argv = require('minimist')(process.argv.slice(2))
 
 async function init() {
-  const targetDir = argv._[0]
+  const targetDir = argv._[0] || '.'
   const cwd = process.cwd()
   const root = path.join(cwd, targetDir)
   const languageAlias = {
@@ -15,13 +15,6 @@ async function init() {
   const renameFiles = {
     _gitignore: '.gitignore'
   }
-
-  const exsiting = fs.pathExistsSync(root)
-  if (exsiting) {
-    console.error(`Error: target directory is not empty.`)
-    process.exit(1)
-  }
-
   const answer = await prompt([
     {
       type: 'select',
@@ -33,12 +26,18 @@ async function init() {
       type: 'select',
       name: 'language',
       message: 'Select a language',
-      choices: ['JavaScript', 'TypeScript']
+      choices: ['TypeScript']
     }
   ])
-
   console.log(`\nScaffolding project in ${root}...`)
+
   await fs.ensureDir(root)
+  const existing = await fs.readdir(root)
+  if (existing.length) {
+    console.error(`Error: target directory is not empty.`)
+    process.exit(1)
+  }
+
   const templateDir = path.join(
     __dirname,
     `template-${answer.type.toLowerCase()}-${languageAlias[answer.language]}`
@@ -60,7 +59,12 @@ async function init() {
   }
 
   const pkg = require(path.join(templateDir, 'package.json'))
-  pkg.name = path.basename(root)
+  const pkgName = path.basename(root)
+  const entry = (name, mod) => `dist/${name}.${mod}.js`
+  pkg.name = pkgName
+  pkg.main = entry(pkgName, 'cjs')
+  pkg.module = entry(pkgName, 'es')
+  pkg.types = entry('index', 'd')
   await write('package.json', JSON.stringify(pkg, null, 2))
 
   console.log(`\nDone. Now run:\n`)
