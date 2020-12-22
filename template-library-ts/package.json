@@ -31,8 +31,11 @@
   "author": "username <email@domain.com>",
   "license": "MIT",
   "devDependencies": {
+    "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@rollup/plugin-replace": "^2.3.4",
+    "@types/jest": "^26.0.19",
+    "@types/node": "^14.14.14",
     "@typescript-eslint/parser": "^4.9.1",
     "eslint": "^7.13.0",
     "eslint-webpack-plugin": "^2.3.0",

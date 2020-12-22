@@ -1,6 +1,7 @@
 import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
-import tsPlugin from 'rollup-plugin-typescript2'
+import json from '@rollup/plugin-json'
+import ts from 'rollup-plugin-typescript2'
 import { terser } from 'rollup-plugin-terser'
 import pkg from './package.json'
 
@@ -42,11 +43,12 @@ const getPackageConfig = () => {
     const isCjs = /cjs/.test(mod)
     const plugins = [
       resolve(),
+      json(),
       replace({
         __DEV__: false,
         __TEST__: testMode,
       }),
-      tsPlugin({ useTsconfigDeclarationDir: true }),
+      ts({ useTsconfigDeclarationDir: true }),
     ].concat(isMini ? terser() : [])
 
     if (isGlobal) output.name = pascalCase(name)

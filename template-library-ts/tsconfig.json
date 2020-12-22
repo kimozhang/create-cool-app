@@ -6,21 +6,20 @@
     "moduleResolution": "node",
     "jsx": "preserve",
     "lib": ["esnext", "dom"],
-    "strict": true,
-    "allowJs": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "sourceMap": true,
-    "noUnusedLocals": true,
+    "allowJs": true,
+    "strict": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "removeComments": false,
     "declaration": true,
-    "declarationDir": "dist",
-    "emitDeclarationOnly": true,
+    "declarationDir": "dist/types",
+    "noUnusedLocals": true,
+    "removeComments": false,
   },
   "include": [
     "src/**/*",
   ],
-  "exclude": [
-    "node_modules",
-  ]
 }
