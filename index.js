@@ -60,11 +60,15 @@ async function init() {
 
   const pkg = require(path.join(templateDir, 'package.json'))
   const pkgName = path.basename(root)
-  const entry = (name, mod) => `dist/${name}.${mod}.js`
-  pkg.name = pkgName
-  pkg.main = entry(pkgName, 'cjs')
-  pkg.module = entry(pkgName, 'es')
-  pkg.types = entry('index', 'd')
+  const rewritedPkgNames = [
+    { name: 'name', value: pkgName },
+    { name: 'main', type: 'cjs' }, 
+    { name: 'module', type: 'es' },
+    { name: 'typings', type: 'd' },
+  ]
+  rewritedPkgNames.forEach(({ name, type, value }) => {
+    pkg[name] = type ? `dist/${pkgName}.${type}.js` : value
+  })
   await write('package.json', JSON.stringify(pkg, null, 2))
 
   console.log(`\nDone. Now run:\n`)
