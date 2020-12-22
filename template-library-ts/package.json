@@ -7,9 +7,9 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "webpack serve --env NODE_ENV=development",
-    "build": "rimraf dist && rollup -c",
-    "build:test": "yarn build --environment NODE_ENV:test",
-    "build:prod": "yarn build --environment NODE_ENV:production",
+    "build": "node scripts/build.js",
+    "build:test": "node scripts/build.js -e test",
+    "build:prod": "node scripts/build.js -e production",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --parser=typescript --write \"src/**/*.ts\""
   },
@@ -37,6 +37,7 @@
     "@types/jest": "^26.0.19",
     "@types/node": "^14.14.14",
     "@typescript-eslint/parser": "^4.9.1",
+    "chalk": "^4.1.0",
     "eslint": "^7.13.0",
     "eslint-webpack-plugin": "^2.3.0",
     "html-webpack-plugin": "^5.0.0-alpha.14",
