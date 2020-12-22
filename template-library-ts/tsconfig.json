@@ -14,7 +14,7 @@
     "esModuleInterop": true,
     "removeComments": false,
     "declaration": true,
-    "declarationDir": "dist/types",
+    "declarationDir": "dist",
     "emitDeclarationOnly": true,
   },
   "include": [

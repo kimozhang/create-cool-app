@@ -39,6 +39,7 @@ const getPackageConfig = () => {
   return Object.entries(outputConfigs).map(([mod, output]) => {
     const isMini = /\.min\.js$/.test(output.file)
     const isGlobal = /global/.test(mod)
+    const isCjs = /cjs/.test(mod)
     const plugins = [
       resolve(),
       replace({
@@ -46,12 +47,11 @@ const getPackageConfig = () => {
         __TEST__: testMode,
       }),
       tsPlugin({ useTsconfigDeclarationDir: true }),
-      isMini ? terser() : null,
-    ]
+    ].concat(isMini ? terser() : [])
 
-    output.banner = banner
-    if (mod === 'cjs') output.exports = 'auto'
     if (isGlobal) output.name = pascalCase(name)
+    if (isCjs) output.exports = 'auto'
+    output.banner = banner
 
     return {
       input: 'src/index.ts',

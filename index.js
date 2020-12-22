@@ -64,7 +64,7 @@ async function init() {
     { name: 'name', value: pkgName },
     { name: 'main', type: 'cjs' }, 
     { name: 'module', type: 'es' },
-    { name: 'typings', type: 'd' },
+    { name: 'types', type: 'd' },
   ]
   rewritedPkgNames.forEach(({ name, type, value }) => {
     pkg[name] = type ? `dist/${pkgName}.${type}.js` : value

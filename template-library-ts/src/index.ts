@@ -1,10 +1,10 @@
-interface Options {
-  txt: string
+function add(a: number, b: number): number {
+  return a + b
 }
 
-function init(options?: Options): void {
+function init() {
   // to do something
-  console.log('I am ready!')
+  return add(2, 4)
 }
 
 export default {
