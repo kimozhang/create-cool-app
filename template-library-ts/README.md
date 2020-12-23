@@ -1,14 +1,13 @@
-# SecooLibrary
+# my-library
 
 ## Development
 
 ```bash
 $ yarn dev
-# or
-$ npm run dev
 ```
 
 ## build
+
 ```bash
 # test environment
 $ yarn build:test
@@ -16,9 +15,16 @@ $ yarn build:test
 $ yarn build:prod
 ```
 
+## test
+
+```bash
+$ yarn test
+```
+
+
 ## API
 
-- xxx(options?: Options): initialization
+- xxx(options?: Options): initialize my-library.js
 
 ## Options
 
