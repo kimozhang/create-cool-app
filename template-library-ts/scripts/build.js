@@ -1,6 +1,5 @@
 const path = require('path')
 const execa = require('execa')
-const rollup = require('rollup')
 const chalk = require('chalk')
 const args = require('minimist')(process.argv.slice(2))
 
