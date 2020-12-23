@@ -2,7 +2,7 @@
   "name": "my-library",
   "version": "0.0.1",
   "description": "my-library.js",
-  "main": "dist/my-library.cjs.js",
+  "main": "index.js",
   "module": "dist/my-library.es.js",
   "types": "dist/index.d.ts",
   "files": [
