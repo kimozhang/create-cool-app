@@ -37,6 +37,8 @@ packageFormats.forEach(format => {
 export default packageConfigs
 
 function createConfig(format, output, plugins = []) {
+  output.externalLiveBindings = false
+
   const entryFile = 'src/index.ts'
   const isTestBuild = process.env.NODE_ENV !== 'production'
   const isGlobalBuild = /global/.test(format)

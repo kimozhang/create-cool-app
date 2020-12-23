@@ -18,6 +18,6 @@
     "removeComments": false,
   },
   "include": [
-    "src/**/*",
+    "src/**/*", "__tests__",
   ],
 }

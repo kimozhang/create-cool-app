@@ -5,6 +5,10 @@
   "main": "dist/my-library.cjs.js",
   "module": "dist/my-library.es.js",
   "types": "dist/my-library.d.ts",
+  "files": [
+    "index.js",
+    "dist"
+  ],
   "scripts": {
     "dev": "webpack serve --env NODE_ENV=development",
     "build": "node scripts/build.js",
