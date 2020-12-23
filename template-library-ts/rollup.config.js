@@ -30,6 +30,10 @@ const packageConfigs = packageFormats.map((format) =>
 )
 
 packageFormats.forEach((format) => {
+  if (format === 'cjs') {
+    packageConfigs.push(createProductionConfig(format))
+  }
+
   if (/^global/.test(format)) {
     packageConfigs.push(createMinifiedConfig(format))
   }
@@ -95,6 +99,13 @@ function createReplacePlugin(isTestBuild) {
   return replace({
     __DEV__: false,
     __TEST__: isTestBuild,
+  })
+}
+
+function createProductionConfig(format) {
+  return createConfig(format, {
+    file: resolve(`dist/${name}.${format}.prod.js`),
+    format: outputConfigs[format].format,
   })
 }
 
