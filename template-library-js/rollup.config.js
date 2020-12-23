@@ -1,72 +1,125 @@
 import path from 'path'
-import resolve from '@rollup/plugin-node-resolve'
-import replace from '@rollup/plugin-replace'
 import json from '@rollup/plugin-json'
+import replace from '@rollup/plugin-replace'
 import { getBabelOutputPlugin } from '@rollup/plugin-babel'
-import { terser } from 'rollup-plugin-terser'
-import pkg from './package.json'
-import { pathToFileURL } from 'url'
 
-const testMode = process.env.NODE_ENV !== 'production'
-const { name } = pkg
-const banner =
-  '/*!\n' +
-  ` * ${name}.js v${pkg.version}\n` +
-  ` * (c) 2020-${new Date().getFullYear()} ${pkg.author.split(' ')[0]} \n` +
-  ' * Released under the MIT License.\n' +
-  ' */'
+const packageDir = path.resolve(__dirname)
+const name = path.basename(packageDir)
+const resolve = (p) => path.resolve(packageDir, p)
 const outputConfigs = {
   esm: {
-    file: `dist/${name}.esm.js`,
+    file: resolve(`dist/${name}.esm.js`),
     format: 'es',
   },
   cjs: {
-    file: `dist/${name}.cjs.js`,
+    file: resolve(`dist/${name}.cjs.js`),
     format: 'cjs',
   },
   global: {
-    file: `dist/${name}.global.js`,
-    format: 'iife',
-  },
-  'global-prod': {
-    file: `dist/${name}.global.min.js`,
+    file: resolve(`dist/${name}.global.js`),
     format: 'iife',
   },
 }
-
 const pascalCase = (s) => {
   s = s.replace(/-(\w)/g, (_, m) => m.toUpperCase())
   return s[0].toUpperCase() + s.slice(1)
 }
-const getRollupConfig = () => {
-  return Object.entries(outputConfigs).map(([mod, output]) => {
-    const entryFile = path.resolve(__dirname, 'src/index.js')
-    const isMini = /\.min\.js$/.test(output.file)
-    const isGlobal = /global/.test(mod)
-    const isCjs = /cjs/.test(mod)
-    const plugins = [
-      resolve(),
+const packageFormats = Object.keys(outputConfigs)
+const packageConfigs = packageFormats.map((format) =>
+  createConfig(format, outputConfigs[format])
+)
+
+packageFormats.forEach((format) => {
+  if (format === 'cjs') {
+    packageConfigs.push(createProductionConfig(format))
+  }
+
+  if (/^global/.test(format)) {
+    packageConfigs.push(createMinifiedConfig(format))
+  }
+})
+
+export default packageConfigs
+
+function createConfig(format, output, plugins = []) {
+  output.externalLiveBindings = false
+
+  const entryFile = 'src/index.js'
+  const isTestBuild = process.env.NODE_ENV !== 'production'
+  const isGlobalBuild = /global/.test(format)
+
+  if (isGlobalBuild) {
+    output.name = pascalCase(name)
+  }
+
+  const external = []
+  const nodePlugins =
+    format !== 'cjs'
+      ? [
+          require('@rollup/plugin-node-resolve').nodeResolve(),
+          require('@rollup/plugin-commonjs')({
+            sourceMap: false,
+          }),
+          require('rollup-plugin-node-builtins')(),
+          require('rollup-plugin-node-globals')(),
+        ]
+      : []
+  const babelPlugin = getBabelOutputPlugin({
+    configFile: resolve('.babelrc'),
+    allowAllFormats: true,
+  })
+
+  return {
+    input: entryFile,
+    external,
+    output,
+    plugins: [
       json(),
-      replace({
-        __DEV__: false,
-        __TEST__: testMode,
-      }),
-      getBabelOutputPlugin({
-        configFile: path.resolve(__dirname, '.babelrc'),
-        allowAllFormats: true,
-      }),
-    ].concat(isMini ? [terser()] : [])
+      createReplacePlugin(isTestBuild),
+      babelPlugin,
+      ...nodePlugins,
+      ...plugins,
+    ],
+    onwarn(msg, warn) {
+      if (!/Circular/.test(msg)) {
+        warn(msg)
+      }
+    },
+  }
+}
 
-    if (isGlobal) output.name = pascalCase(name)
-    if (isCjs) output.exports = 'auto'
-    output.banner = banner
-
-    return {
-      input: entryFile,
-      output,
-      plugins,
-    }
+function createReplacePlugin(isTestBuild) {
+  return replace({
+    __DEV__: false,
+    __TEST__: isTestBuild,
   })
 }
 
-export default getRollupConfig()
+function createProductionConfig(format) {
+  return createConfig(format, {
+    file: resolve(`dist/${name}.${format}.prod.js`),
+    format: outputConfigs[format].format,
+  })
+}
+
+function createMinifiedConfig(format) {
+  const { terser } = require('rollup-plugin-terser')
+
+  return createConfig(
+    format,
+    {
+      file: outputConfigs[format].file.replace(/\.js$/, '.prod.js'),
+      format: outputConfigs[format].format,
+    },
+    [
+      terser({
+        module: /^esm/.test(format),
+        compress: {
+          ecma: 2015,
+          pure_getters: true,
+        },
+        safari10: true,
+      }),
+    ]
+  )
+}
