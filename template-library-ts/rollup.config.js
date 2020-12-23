@@ -5,17 +5,18 @@ import replace from '@rollup/plugin-replace'
 
 const packageDir = path.resolve(__dirname)
 const name = path.basename(packageDir)
+const resolve = (p) => path.resolve(packageDir, p)
 const outputConfigs = {
   esm: {
-    file: `dist/${name}.esm.js`,
+    file: resolve(`dist/${name}.esm.js`),
     format: 'es',
   },
   cjs: {
-    file: `dist/${name}.cjs.js`,
+    file: resolve(`dist/${name}.cjs.js`),
     format: 'cjs',
   },
   global: {
-    file: `dist/${name}.global.js`,
+    file: resolve(`dist/${name}.global.js`),
     format: 'iife',
   },
 }
