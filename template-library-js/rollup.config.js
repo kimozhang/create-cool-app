@@ -1,8 +1,11 @@
+import path from 'path'
 import resolve from '@rollup/plugin-node-resolve'
 import replace from '@rollup/plugin-replace'
 import json from '@rollup/plugin-json'
+import { getBabelOutputPlugin } from '@rollup/plugin-babel'
 import { terser } from 'rollup-plugin-terser'
 import pkg from './package.json'
+import { pathToFileURL } from 'url'
 
 const testMode = process.env.NODE_ENV !== 'production'
 const { name } = pkg
@@ -35,8 +38,9 @@ const pascalCase = (s) => {
   s = s.replace(/-(\w)/g, (_, m) => m.toUpperCase())
   return s[0].toUpperCase() + s.slice(1)
 }
-const getPackageConfig = () => {
+const getRollupConfig = () => {
   return Object.entries(outputConfigs).map(([mod, output]) => {
+    const entryFile = path.resolve(__dirname, 'src/index.js')
     const isMini = /\.min\.js$/.test(output.file)
     const isGlobal = /global/.test(mod)
     const isCjs = /cjs/.test(mod)
@@ -47,18 +51,22 @@ const getPackageConfig = () => {
         __DEV__: false,
         __TEST__: testMode,
       }),
-    ].concat(isMini ? terser() : [])
+      getBabelOutputPlugin({
+        configFile: path.resolve(__dirname, '.babelrc'),
+        allowAllFormats: true,
+      }),
+    ].concat(isMini ? [terser()] : [])
 
     if (isGlobal) output.name = pascalCase(name)
     if (isCjs) output.exports = 'auto'
     output.banner = banner
 
     return {
-      input: 'src/index.js',
+      input: entryFile,
       output,
       plugins,
     }
   })
 }
 
-export default getPackageConfig()
+export default getRollupConfig()
