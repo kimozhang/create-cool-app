@@ -6,7 +6,7 @@ const args = require('minimist')(process.argv.slice(2))
 run().catch(console.error)
 
 async function run() {
-  const env = args.env || args.e || 'production'
+  const env = args.e || args.env || 'production'
   const target = path.basename(process.cwd())
   const dist = 'dist'
 
