@@ -4,7 +4,7 @@
   "description": "my-library.js",
   "main": "dist/my-library.cjs.js",
   "module": "dist/my-library.es.js",
-  "types": "dist/my-library.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
     "index.js",
     "dist"
