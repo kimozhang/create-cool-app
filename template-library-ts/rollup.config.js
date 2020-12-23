@@ -2,8 +2,6 @@ import path from 'path'
 import ts from 'rollup-plugin-typescript2'
 import json from '@rollup/plugin-json'
 import replace from '@rollup/plugin-replace'
-import { nodeResolve } from '@rollup/plugin-node-resolve'
-import { terser } from 'rollup-plugin-terser'
 
 const packageDir = path.resolve(__dirname)
 const name = path.basename(packageDir)
@@ -19,16 +17,18 @@ const outputConfigs = {
   global: {
     file: `dist/${name}.global.js`,
     format: 'iife',
-  }
+  },
 }
-const pascalCase = s => {
+const pascalCase = (s) => {
   s = s.replace(/-(\w)/g, (_, m) => m.toUpperCase())
   return s[0].toUpperCase() + s.slice(1)
 }
 const packageFormats = Object.keys(outputConfigs)
-const packageConfigs = packageFormats.map(format => createConfig(format, outputConfigs[format]))
+const packageConfigs = packageFormats.map((format) =>
+  createConfig(format, outputConfigs[format])
+)
 
-packageFormats.forEach(format => {
+packageFormats.forEach((format) => {
   if (/^global/.test(format)) {
     packageConfigs.push(createMinifiedConfig(format))
   }
@@ -48,19 +48,27 @@ function createConfig(format, output, plugins = []) {
   }
 
   const external = []
-  const nodePlugins = [
-    nodeResolve()
-  ]
+  const nodePlugins =
+    format !== 'cjs'
+      ? [
+          require('@rollup/plugin-node-resolve').nodeResolve(),
+          require('@rollup/plugin-commonjs')({
+            sourceMap: false,
+          }),
+          require('rollup-plugin-node-builtins')(),
+          require('rollup-plugin-node-globals')(),
+        ]
+      : []
   const tsPlugin = ts({
     tsconfig: path.resolve(__dirname, 'tsconfig.json'),
     cacheRoot: path.resolve(__dirname, 'node_modules/.rts2_cache'),
     tsconfigOverride: {
       compilerOptions: {
         sourceMap: false,
-        declaration: true
+        declaration: true,
       },
-      exclude: ['**/__tests__']
-    }
+      exclude: ['**/__tests__'],
+    },
   })
 
   return {
@@ -69,9 +77,7 @@ function createConfig(format, output, plugins = []) {
     output,
     plugins: [
       json(),
-      createReplacePlugin(
-        isTestBuild
-      ),
+      createReplacePlugin(isTestBuild),
       tsPlugin,
       ...nodePlugins,
       ...plugins,
@@ -80,7 +86,7 @@ function createConfig(format, output, plugins = []) {
       if (!/Circular/.test(msg)) {
         warn(msg)
       }
-    }
+    },
   }
 }
 
@@ -92,21 +98,23 @@ function createReplacePlugin(isTestBuild) {
 }
 
 function createMinifiedConfig(format) {
+  const { terser } = require('rollup-plugin-terser')
+
   return createConfig(
     format,
     {
       file: outputConfigs[format].file.replace(/\.js$/, '.prod.js'),
-      format: outputConfigs[format].format
+      format: outputConfigs[format].format,
     },
     [
       terser({
         module: /^esm/.test(format),
         compress: {
           ecma: 2015,
-          pure_getters: true
+          pure_getters: true,
         },
-        safari10: true
-      })
+        safari10: true,
+      }),
     ]
   )
 }
