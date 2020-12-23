@@ -24,9 +24,9 @@
     "*.js": [
       "prettier --write"
     ],
-    "src/**/*.ts": [
+    "src/**/*.js": [
       "eslint",
-      "prettier --parser=typescript --write"
+      "prettier --write"
     ]
   },
   "author": "username <email@domain.com>",
