@@ -26,7 +26,7 @@ async function init() {
       type: 'select',
       name: 'language',
       message: 'Select a language',
-      choices: ['TypeScript']
+      choices: ['JavaScript', 'TypeScript']
     }
   ])
   console.log(`\nScaffolding project in ${root}...`)
