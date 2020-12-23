@@ -1,3 +1,3 @@
-import MyLibrary from '../src'
+import * as MyLibrary from '../src'
 
 MyLibrary.init()

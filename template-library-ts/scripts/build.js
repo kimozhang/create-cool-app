@@ -4,9 +4,9 @@ const rollup = require('rollup')
 const chalk = require('chalk')
 const args = require('minimist')(process.argv.slice(2))
 
-build().catch(console.error)
+run().catch(console.error)
 
-async function build() {
+async function run() {
   const env = args.env || args.e || 'production'
   const target = path.basename(process.cwd())
   const dist = 'dist'

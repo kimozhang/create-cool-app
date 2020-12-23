@@ -1,18 +1,12 @@
-import resolve from '@rollup/plugin-node-resolve'
-import replace from '@rollup/plugin-replace'
-import json from '@rollup/plugin-json'
+import path from 'path'
 import ts from 'rollup-plugin-typescript2'
+import json from '@rollup/plugin-json'
+import replace from '@rollup/plugin-replace'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
 import { terser } from 'rollup-plugin-terser'
-import pkg from './package.json'
 
-const testMode = process.env.NODE_ENV !== 'production'
-const { name } = pkg
-const banner =
-  '/*!\n' +
-  ` * ${name}.js v${pkg.version}\n` +
-  ` * (c) 2020-${new Date().getFullYear()} ${pkg.author.split(' ')[0]} \n` +
-  ' * Released under the MIT License.\n' +
-  ' */'
+const packageDir = path.resolve(__dirname)
+const name = path.basename(packageDir)
 const outputConfigs = {
   esm: {
     file: `dist/${name}.esm.js`,
@@ -25,42 +19,92 @@ const outputConfigs = {
   global: {
     file: `dist/${name}.global.js`,
     format: 'iife',
-  },
-  'global-prod': {
-    file: `dist/${name}.global.min.js`,
-    format: 'iife',
-  },
+  }
 }
-
-const pascalCase = (s) => {
+const pascalCase = s => {
   s = s.replace(/-(\w)/g, (_, m) => m.toUpperCase())
   return s[0].toUpperCase() + s.slice(1)
 }
-const getPackageConfig = () => {
-  return Object.entries(outputConfigs).map(([mod, output]) => {
-    const isMini = /\.min\.js$/.test(output.file)
-    const isGlobal = /global/.test(mod)
-    const isCjs = /cjs/.test(mod)
-    const plugins = [
-      resolve(),
-      json(),
-      replace({
-        __DEV__: false,
-        __TEST__: testMode,
-      }),
-      ts({ useTsconfigDeclarationDir: true }),
-    ].concat(isMini ? terser() : [])
+const packageFormats = Object.keys(outputConfigs)
+const packageConfigs = packageFormats.map(format => createConfig(format, outputConfigs[format]))
 
-    if (isGlobal) output.name = pascalCase(name)
-    if (isCjs) output.exports = 'auto'
-    output.banner = banner
+packageFormats.forEach(format => {
+  if (/^global/.test(format)) {
+    packageConfigs.push(createMinifiedConfig(format))
+  }
+})
 
-    return {
-      input: 'src/index.ts',
-      output,
-      plugins,
+export default packageConfigs
+
+function createConfig(format, output, plugins = []) {
+  const entryFile = 'src/index.ts'
+  const isTestBuild = process.env.NODE_ENV !== 'production'
+  const isGlobalBuild = /global/.test(format)
+
+  if (isGlobalBuild) {
+    output.name = pascalCase(name)
+  }
+
+  const external = []
+  const nodePlugins = [
+    nodeResolve()
+  ]
+  const tsPlugin = ts({
+    tsconfig: path.resolve(__dirname, 'tsconfig.json'),
+    cacheRoot: path.resolve(__dirname, 'node_modules/.rts2_cache'),
+    tsconfigOverride: {
+      compilerOptions: {
+        sourceMap: false,
+        declaration: true
+      },
+      exclude: ['**/__tests__']
     }
+  })
+
+  return {
+    input: entryFile,
+    external,
+    output,
+    plugins: [
+      json(),
+      createReplacePlugin(
+        isTestBuild
+      ),
+      tsPlugin,
+      ...nodePlugins,
+      ...plugins,
+    ],
+    onwarn(msg, warn) {
+      if (!/Circular/.test(msg)) {
+        warn(msg)
+      }
+    }
+  }
+}
+
+function createReplacePlugin(isTestBuild) {
+  return replace({
+    __DEV__: false,
+    __TEST__: isTestBuild,
   })
 }
 
-export default getPackageConfig()
+function createMinifiedConfig(format) {
+  return createConfig(
+    format,
+    {
+      file: outputConfigs[format].file.replace(/\.js$/, '.prod.js'),
+      format: outputConfigs[format].format
+    },
+    [
+      terser({
+        module: /^esm/.test(format),
+        compress: {
+          ecma: 2015,
+          pure_getters: true
+        },
+        safari10: true
+      })
+    ]
+  )
+}

@@ -14,8 +14,6 @@
     "strict": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "declaration": true,
-    "declarationDir": "dist/types",
     "noUnusedLocals": true,
     "removeComments": false,
   },
