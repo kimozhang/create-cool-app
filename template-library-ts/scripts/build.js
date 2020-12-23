@@ -13,13 +13,13 @@ async function run() {
 
   console.log()
   console.log(chalk.bold(chalk.yellow(`removing ${dist} directory...`)))
-  await execa('npx', ['rimraf', dist], { stdio: 'inherit' })
+  await execa('rimraf', [dist], { stdio: 'inherit' })
 
   console.log()
   console.log(chalk.bold(chalk.yellow(`Rolling up for ${target}...`)))
   await execa(
-    'npx',
-    ['rollup', '-c', '--environment', [`NODE_ENV:${env}`].join(',')],
+    'rollup',
+    ['-c', '--environment', [`NODE_ENV:${env}`].join(',')],
     { stdio: 'inherit' }
   )
 }
