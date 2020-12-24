@@ -1,15 +1,15 @@
 const path = require('path')
 const execa = require('execa')
 const chalk = require('chalk')
-const args = require('minimist')(process.argv.slice(2))
 
+const args = require('minimist')(process.argv.slice(2))
+const env = args.e || args.env || 'production'
 const run = (bin, args, opts) => execa(bin, args, { stdio: 'inherit', ...opts })
 const step = msg => console.log(chalk.bold.yellow(msg))
 
 main().catch(console.error)
 
 async function main() {
-  const env = args.e || args.env || 'production'
   const target = path.basename(process.cwd())
   const dist = 'dist'
 
