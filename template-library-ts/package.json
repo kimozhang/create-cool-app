@@ -16,7 +16,8 @@
     "build:prod": "node scripts/build.js -e production",
     "test": "jest --runInBand",
     "lint": "eslint src/**/*.ts",
-    "format": "prettier --parser=typescript --write \"src/**/*.ts\""
+    "format": "prettier --parser=typescript --write \"src/**/*.ts\"",
+    "release": "node scripts/release.js"
   },
   "keywords": [],
   "husky": {
