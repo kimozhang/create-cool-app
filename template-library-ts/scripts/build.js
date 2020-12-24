@@ -3,6 +3,9 @@ const execa = require('execa')
 const chalk = require('chalk')
 const args = require('minimist')(process.argv.slice(2))
 
+const run = (bin, args, opts) => execa(bin, args, { stdio: 'inherit', ...opts })
+const step = msg => console.log(chalk.bold.yellow(msg))
+
 run().catch(console.error)
 
 async function run() {
@@ -10,15 +13,12 @@ async function run() {
   const target = path.basename(process.cwd())
   const dist = 'dist'
 
-  console.log()
-  console.log(chalk.bold(chalk.yellow(`removing ${dist} directory...`)))
-  await execa('rimraf', [dist], { stdio: 'inherit' })
+  step(`\nremoving ${dist} directory...`)
+  await run('rimraf', [dist])
 
-  console.log()
-  console.log(chalk.bold(chalk.yellow(`Rolling up for ${target}...`)))
-  await execa(
+  step(`\nRolling up for ${target}...`)
+  await run(
     'rollup',
-    ['-c', '--environment', [`NODE_ENV:${env}`].join(',')],
-    { stdio: 'inherit' }
+    ['-c', '--environment', [`NODE_ENV:${env}`].join(',')]
   )
 }
