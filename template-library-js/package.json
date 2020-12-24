@@ -4,6 +4,10 @@
   "description": "",
   "main": "index.js",
   "module": "dist/my-library.es.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
   "scripts": {
     "dev": "webpack serve --env NODE_ENV=development",
     "build": "node scripts/build.js",
