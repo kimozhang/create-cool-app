@@ -15,7 +15,7 @@
     "build:dev": "node scripts/build.js -e development",
     "build:prod": "node scripts/build.js -e production",
     "test": "jest --runInBand",
-    "lint": "eslint src/**/*.ts",
+    "lint": "eslint --ext .ts src/**/*",
     "format": "prettier --parser=typescript --write \"src/**/*.ts\"",
     "release": "node scripts/release.js"
   },
