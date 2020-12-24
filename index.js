@@ -38,9 +38,11 @@ async function init() {
     process.exit(1)
   }
 
+  const templateType = answer.type.toLowerCase()
+  const language = languageAlias[answer.language]
   const templateDir = path.join(
     __dirname,
-    `template-${answer.type.toLowerCase()}-${languageAlias[answer.language]}`
+    `template-${templateType}${language === 'ts' ? '-ts' : ''}`
   )
   const write = async (file, content) => {
     const targetPath = renameFiles[file]
