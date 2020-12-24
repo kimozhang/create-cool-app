@@ -45,7 +45,7 @@ function createConfig(format, output, plugins = []) {
   output.externalLiveBindings = false
 
   const entryFile = 'src/index.ts'
-  const isTestBuild = process.env.NODE_ENV !== 'production'
+  const isDevBuild = process.env.NODE_ENV !== 'production'
   const isGlobalBuild = /global/.test(format)
 
   if (isGlobalBuild) {
@@ -82,7 +82,7 @@ function createConfig(format, output, plugins = []) {
     output,
     plugins: [
       json(),
-      createReplacePlugin(isTestBuild),
+      createReplacePlugin(isDevBuild),
       tsPlugin,
       ...nodePlugins,
       ...plugins,
@@ -95,10 +95,10 @@ function createConfig(format, output, plugins = []) {
   }
 }
 
-function createReplacePlugin(isTestBuild) {
+function createReplacePlugin(isDevBuild) {
   return replace({
-    __DEV__: false,
-    __TEST__: isTestBuild,
+    __DEV__: isDevBuild,
+    __TEST__: false,
   })
 }
 
