@@ -12,7 +12,8 @@
     "test": "jest --runInBand",
     "lint": "eslint --ext .js src/**/*",
     "format": "prettier --write \"src/**/*.js\"",
-    "release": "node scripts/release.js"
+    "release": "node scripts/release.js",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "keywords": [],
   "husky": {
@@ -42,6 +43,7 @@
     "@typescript-eslint/parser": "^4.9.1",
     "babel-loader": "^8.2.2",
     "chalk": "^4.1.0",
+    "conventional-changelog-cli": "^2.1.1",
     "eslint": "^7.13.0",
     "eslint-webpack-plugin": "^2.3.0",
     "html-webpack-plugin": "^5.0.0-alpha.14",
