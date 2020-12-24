@@ -9,7 +9,7 @@
     "build": "node scripts/build.js",
     "build:test": "node scripts/build.js -e test",
     "build:prod": "node scripts/build.js -e production",
-    "test": "jest",
+    "test": "jest --runInBand",
     "lint": "eslint src/**/*.js",
     "format": "prettier --write \"src/**/*.js\""
   },
