@@ -51,6 +51,9 @@ function createConfig(format, output, plugins = []) {
   if (isGlobalBuild) {
     output.name = pascalCase(name)
   }
+  if (format === 'cjs') {
+    output.exports = 'auto'
+  }
 
   const external = []
   const nodePlugins =
