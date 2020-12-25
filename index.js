@@ -2,19 +2,27 @@
 const path = require('path')
 const fs = require('fs-extra')
 const { prompt } = require('enquirer')
-const argv = require('minimist')(process.argv.slice(2))
+const args = require('minimist')(process.argv.slice(2))
 
-async function init() {
-  const targetDir = argv._[0] || '.'
+const langAlias = {
+  JavaScript: 'js',
+  TypeScript: 'ts'
+}
+
+async function main() {
+  const targetDir = args._[0] || '.'
   const cwd = process.cwd()
   const root = path.join(cwd, targetDir)
-  const languageAlias = {
-    JavaScript: 'js',
-    TypeScript: 'ts'
+
+  // check if there is already target directory
+  await fs.ensureDir(root)
+  const existing = await fs.readdir(root)
+  if (existing.length) {
+    console.warn(`Error: target directory is not empty.`)
+    process.exit(1)
   }
-  const renameFiles = {
-    _gitignore: '.gitignore'
-  }
+  
+  // select a template
   const answer = await prompt([
     {
       type: 'select',
@@ -24,54 +32,31 @@ async function init() {
     },
     {
       type: 'select',
-      name: 'language',
+      name: 'lang',
       message: 'Select a language',
       choices: ['JavaScript', 'TypeScript']
     }
   ])
+
+  // start scaffolding project
   console.log(`\nScaffolding project in ${root}...`)
-
-  await fs.ensureDir(root)
-  const existing = await fs.readdir(root)
-  if (existing.length) {
-    console.error(`Error: target directory is not empty.`)
-    process.exit(1)
-  }
-
   const templateType = answer.type.toLowerCase()
-  const templateLanguage = languageAlias[answer.language] === 'ts' ? '-ts' : ''
+  const templateLang = langAlias[answer.lang] === 'ts' ? '-ts' : ''
   const templateDir = path.join(
     __dirname,
-    `template-${templateType}${templateLanguage}`
+    `template-${templateType}${templateLang}`
   )
-  const write = async (file, content) => {
-    const targetPath = renameFiles[file]
-      ? path.join(root, renameFiles[file])
-      : path.join(root, file)
-    if (content) {
-      fs.writeFile(targetPath, content)
-    } else {
-      fs.copy(path.join(templateDir, file), targetPath)
-    }
+
+  // copy template
+  await copyTemplate(templateDir, root)
+
+  // replace placeholder
+  if (templateType === 'library') {
+    const libraryName = path.basename(root)
+    await replaceLibraryName(libraryName, root)
   }
 
-  const files = await fs.readdir(templateDir)
-  for(let file of files.filter((f) => f !== 'package.json')) {
-    await write(file)
-  }
-
-  const pkg = require(path.join(templateDir, 'package.json'))
-  const pkgName = path.basename(root)
-  const rewritedPkgNames = [
-    { name: 'name', value: pkgName },
-    { name: 'main', type: 'cjs' }, 
-    { name: 'module', type: 'es' }
-  ]
-  rewritedPkgNames.forEach(({ name, type, value }) => {
-    pkg[name] = type ? `dist/${pkgName}.${type}.js` : value
-  })
-  await write('package.json', JSON.stringify(pkg, null, 2))
-
+  // done
   console.log(`\nDone. Now run:\n`)
   if (root !== cwd) {
     console.log(`  cd ${path.relative(cwd, root)}`)
@@ -81,4 +66,32 @@ async function init() {
   console.log()
 }
 
-init().catch(console.error)
+async function copyTemplate(templateDir, root) {
+  const files = await fs.readdir(templateDir)
+  const excludeFiles = ['node_modules', 'yarn.lock', 'package-lock.json']
+  const renameFiles = { _gitignore: '.gitignore' }
+  const filesToCopy = files.filter(f => !excludeFiles.includes(f))
+
+  for(const file of filesToCopy) {
+    const targetPath = renameFiles[file]
+      ? path.join(root, renameFiles[file])
+      : path.join(root, file)
+    await fs.copy(path.join(templateDir, file), targetPath)
+  }
+}
+
+async function replaceLibraryName(name, root) {
+  const replaceFiles = [
+    path.join(root, 'package.json'),
+    path.join(root, 'index.js')
+  ]
+  const placeholder = /(my-library)/ig
+
+  for(const file of replaceFiles) {
+    const content = await fs.readFile(file, { encoding: 'utf-8' })
+    const result = content.replace(placeholder, name)
+    await fs.writeFile(file, result)
+  }
+}
+
+main().catch(console.error)

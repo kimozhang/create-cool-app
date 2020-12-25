@@ -5,8 +5,8 @@
   "main": "index.js",
   "module": "dist/my-library.esm.js",
   "types": "dist/index.d.ts",
-  "unpkg": "dist/my-libray.global.js",
-  "jsdelivr": "dist/my-libray.global.js",
+  "unpkg": "dist/my-library.global.js",
+  "jsdelivr": "dist/my-library.global.js",
   "files": [
     "index.js",
     "dist"
