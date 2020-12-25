@@ -82,7 +82,8 @@ async function copyTemplate(templateDir, root) {
 async function replaceLibraryName(name, root) {
   const replaceFiles = [
     path.join(root, 'package.json'),
-    path.join(root, 'index.js')
+    path.join(root, 'index.js'),
+    path.join(root, 'README.md'),
   ]
   const placeholder = /(my-library)/ig
 
