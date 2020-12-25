@@ -7,6 +7,6 @@ function init(options?: Options) {
   console.log('I am ready!')
 }
 
-export {
+export default {
   init,
 }

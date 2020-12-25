@@ -3,4 +3,4 @@ function init() {
   console.log(`I am ready!`)
 }
 
-export { init }
+export default { init }
