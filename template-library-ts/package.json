@@ -33,7 +33,7 @@
     "*.js": [
       "prettier --write"
     ],
-    "{src,demo}/**/*.ts": [
+    "src/**/*.ts": [
       "eslint",
       "prettier --parser=typescript --write"
     ]
