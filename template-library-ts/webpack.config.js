@@ -44,7 +44,6 @@ module.exports = (env) => {
     ],
     devServer: {
       contentBase: [root('dist')],
-      host: 'local.localhost.com',
       open: true,
       proxy: {},
     },

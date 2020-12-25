@@ -45,13 +45,10 @@ module.exports = (env) => {
       }),
       new HTMLWebpackPlugin({
         template: root('demo/index.html'),
-        inject: 'head',
-        scriptLoading: 'blocking',
       }),
     ],
     devServer: {
       contentBase: [root('dist')],
-      host: 'local.localhost.com',
       open: true,
       proxy: {},
     },
