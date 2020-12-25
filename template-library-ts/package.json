@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
-  "module": "dist/my-library.es.js",
+  "module": "dist/my-library.esm.js",
   "types": "dist/index.d.ts",
   "files": [
     "index.js",
