@@ -4,11 +4,6 @@ const fs = require('fs-extra')
 const { prompt } = require('enquirer')
 const args = require('minimist')(process.argv.slice(2))
 
-const langAlias = {
-  JavaScript: 'js',
-  TypeScript: 'ts'
-}
-
 async function main() {
   const targetDir = args._[0] || '.'
   const cwd = process.cwd()
@@ -40,6 +35,10 @@ async function main() {
 
   // start scaffolding project
   console.log(`\nScaffolding project in ${root}...`)
+  const langAlias = {
+    JavaScript: 'js',
+    TypeScript: 'ts'
+  }
   const templateType = answer.type.toLowerCase()
   const templateLang = langAlias[answer.lang] === 'ts' ? '-ts' : ''
   const templateDir = path.join(
