@@ -40,8 +40,6 @@ module.exports = (env) => {
       }),
       new HTMLWebpackPlugin({
         template: root('demo/index.html'),
-        inject: 'head',
-        scriptLoading: 'blocking',
       }),
     ],
     devServer: {
