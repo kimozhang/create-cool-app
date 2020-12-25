@@ -87,7 +87,7 @@ async function replaceLibraryName(name, root) {
   ]
   const placeholder = /(my-library)/ig
 
-  for(const file of replaceFiles) {
+  for (const file of replaceFiles) {
     const content = await fs.readFile(file, { encoding: 'utf-8' })
     const result = content.replace(placeholder, name)
     await fs.writeFile(file, result)
