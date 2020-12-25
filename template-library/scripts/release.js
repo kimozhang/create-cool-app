@@ -4,10 +4,9 @@ const chalk = require('chalk')
 const semver = require('semver')
 const execa = require('execa')
 const { prompt } = require('enquirer')
-const pkg = require('../package.json')
+const currentVersion = require('../package.json').version
 const args = require('minimist')(process.argv.slice(2))
 
-const currentVersion = pkg.version
 const preId =
   args.preid ||
   (semver.prerelease(currentVersion) && semver.prerelease(currentVersion)[0])
@@ -132,7 +131,7 @@ function updateVersion(version) {
 
 async function publishPackage(version, runIfNotDry) {
   const pkgRoot = path.resolve(__dirname, '..')
-  const pkgName = pkg.name
+  const pkgName = path.basename(pkgRoot)
   const releaseTag = args.tag
 
   step(`Publishing ${pkgName}...`)
