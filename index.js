@@ -68,7 +68,7 @@ async function main() {
 
 async function copyTemplate(templateDir, root) {
   const files = await fs.readdir(templateDir)
-  const excludeFiles = ['node_modules']
+  const excludeFiles = ['node_modules', 'dist']
   const renameFiles = { _gitignore: '.gitignore' }
   const filesToCopy = files.filter(f => !excludeFiles.includes(f))
 
