@@ -9,9 +9,9 @@ $ yarn dev
 ## build
 
 ```bash
-# development environment
+# development
 $ yarn build:dev
-# production environment
+# production
 $ yarn build:prod
 ```
 
