@@ -12,7 +12,7 @@ module.exports = (env) => {
     mode: env.NODE_ENV,
     devtool: devMode ? 'cheap-module-source-map' : false,
     entry: {
-      main: root('demo/index.js'),
+      main: root('demo/main.js'),
     },
     output: {
       path: root('dist'),
@@ -37,7 +37,7 @@ module.exports = (env) => {
     },
     plugins: [
       new ESLintWebpackPlugin({
-        files: ['src/**/*.js', 'demo/**/*.js'],
+        files: ['src/**/*.js'],
       }),
       new webpack.DefinePlugin({
         __DEV__: devMode,
