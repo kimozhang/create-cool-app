@@ -21,7 +21,7 @@
     "url": "https://github.com/kimozhang/create-cool-app/issues"
   },
   "homepage": "https://github.com/kimozhang/create-cool-app#readme",
-  "devDependencies": {
+  "dependencies": {
     "enquirer": "^2.3.6",
     "fs-extra": "^9.0.1",
     "minimist": "^1.2.5"
