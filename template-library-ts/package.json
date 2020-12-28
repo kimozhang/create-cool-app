@@ -1,6 +1,6 @@
 {
   "name": "my-library",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "index.js",
   "module": "dist/my-library.esm.js",
@@ -20,8 +20,7 @@
     "lint": "eslint --ext .ts src/**/*",
     "format": "prettier --parser=typescript --write \"src/**/*.ts\"",
     "release": "node scripts/release.js",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "preinstall": "node ./scripts/checkYarn.js"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "keywords": [],
   "gitHooks": {

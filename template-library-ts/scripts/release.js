@@ -7,6 +7,11 @@ const { prompt } = require('enquirer')
 const currentVersion = require('../package.json').version
 const args = require('minimist')(process.argv.slice(2))
 
+const packageManager = fs.existsSync(path.resolve(process.cwd(), "yarn.lock"))
+  ? 'yarn'
+  : 'npm'
+const argsDelimiter = packageManager === 'npm' ? '--' : ''
+
 const preId =
   args.preid ||
   (semver.prerelease(currentVersion) && semver.prerelease(currentVersion)[0])
@@ -76,7 +81,7 @@ async function main() {
   step('\nRunning tests...')
   if (!skipTests && !isDryRun) {
     await run(bin('jest'), ['--clearCache'])
-    await run('yarn', ['test'])
+    await run(packageManager, ['run', 'test'])
   } else {
     console.log(`(skipped)`)
   }
@@ -88,13 +93,13 @@ async function main() {
   // build package with types
   step('\nBuilding package...')
   if (!skipBuild && !isDryRun) {
-    await run('yarn', ['build', '--release'])
+    await run(packageManager, ['run', 'build', argsDelimiter, '--release'])
   } else {
     console.log(`(skipped)`)
   }
 
   // generate changelog
-  await run(`yarn`, ['changelog'])
+  await run(packageManager, ['run', 'changelog'])
 
   const { stdout } = await run('git', ['diff'], { stdio: 'pipe' })
   if (stdout) {
@@ -137,11 +142,10 @@ async function publishPackage(version, runIfNotDry) {
   step(`Publishing ${pkgName}...`)
   try {
     await runIfNotDry(
-      'yarn',
+      packageManager,
       [
         'publish',
-        '--new-version',
-        version,
+        ...(packageManager === 'yarn' ? ['--new-version', version]: []),
         ...(releaseTag ? ['--tag', releaseTag] : []),
         '--access',
         'public',
