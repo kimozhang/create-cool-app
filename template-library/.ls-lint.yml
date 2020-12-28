@@ -1,0 +1,3 @@
+ls:
+  {src,__tests__}:
+    .js: kebab-case
