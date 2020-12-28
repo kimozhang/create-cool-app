@@ -1,0 +1,8 @@
+ls:
+  src:
+    .js: kebab-case
+    .ts: camelCase | PascalCase
+    .d.ts: camelCase
+    
+  __tests:
+    .spec.ts: camelCase | PascalCase

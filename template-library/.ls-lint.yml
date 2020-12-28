@@ -2,6 +2,7 @@ ls:
   src:
     .dir: kebab-case
     .js: kebab-case
+    
   __tests__:
     .spec.js: camelCase | PascalCase
   
