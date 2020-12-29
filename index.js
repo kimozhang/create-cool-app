@@ -7,6 +7,8 @@ const args = require('minimist')(process.argv.slice(2))
 
 const run = (bin, args, opts = {}) => execa(bin, args, { stdio: 'inherit', ...opts })
 
+main().catch(console.error)
+
 async function main() {
   const targetDir = args._[0] || '.'
   const cwd = process.cwd()
@@ -99,7 +101,7 @@ async function replace(templateType, root) {
       break
   }
   
-  replacePlaceholder(
+  await replacePlaceholder(
     (_, m) => {
       switch (m) {
         case 'projectname':
@@ -142,5 +144,3 @@ function parseGitConfig(str) {
 async function git(root) {
   await run('git', ['init', root], { stdio: 'pipe' })
 }
-
-main().catch(console.error)
