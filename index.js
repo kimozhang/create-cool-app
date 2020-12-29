@@ -60,8 +60,8 @@ async function main() {
   if (root !== cwd) {
     console.log(`  cd ${path.relative(cwd, root)}`)
   }
-  console.log(`  npm install (or \`yarn\`)`)
-  console.log(`  npm run dev (or \`yarn dev\`)`)
+  console.log(`  yarn (or \`npm install\`)`)
+  console.log(`  yarn dev (or \`npm run dev\`)`)
   console.log()
 }
 
