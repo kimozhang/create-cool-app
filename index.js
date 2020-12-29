@@ -126,10 +126,6 @@ async function replacePlaceholder(str, placeholder, files) {
   }
 }
 
-async function git(root) {
-  await run('git', ['init', root])
-}
-
 function parseGitConfig(str) {
   const pairs = {}
   str.split('\n').forEach(s => {
@@ -141,6 +137,10 @@ function parseGitConfig(str) {
     }, pairs)
   })
   return pairs
+}
+
+async function git(root) {
+  await run('git', ['init', root], { stdio: 'pipe' })
 }
 
 main().catch(console.error)
