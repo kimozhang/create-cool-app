@@ -1,4 +1,4 @@
-# my-library
+# --projectname--
 
 ## Development
 
@@ -24,7 +24,7 @@ $ yarn test
 
 ## API
 
-- xxx(options?: Options): initialize my-library.js
+- xxx(options?: Options): xxxx
 
 ## Options
 

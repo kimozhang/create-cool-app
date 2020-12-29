@@ -1,11 +1,11 @@
 {
-  "name": "my-library",
+  "name": "--projectname--",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
-  "module": "dist/my-library.esm.js",
-  "unpkg": "dist/my-library.global.js",
-  "jsdelivr": "dist/my-library.global.js",
+  "module": "dist/--projectname--.esm.js",
+  "unpkg": "dist/--projectname--.global.js",
+  "jsdelivr": "dist/--projectname--.global.js",
   "files": [
     "index.js",
     "dist"
@@ -35,7 +35,7 @@
       "prettier --write"
     ]
   },
-  "author": "username <email@domain.com>",
+  "author": "--username-- <--useremail-->",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.12.10",

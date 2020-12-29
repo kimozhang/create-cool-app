@@ -1,12 +1,12 @@
 {
-  "name": "my-library",
+  "name": "--projectname--",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
-  "module": "dist/my-library.esm.js",
+  "module": "dist/--projectname--.esm.js",
   "types": "dist/index.d.ts",
-  "unpkg": "dist/my-library.global.js",
-  "jsdelivr": "dist/my-library.global.js",
+  "unpkg": "dist/--projectname--.global.js",
+  "jsdelivr": "dist/--projectname--.global.js",
   "files": [
     "index.js",
     "dist"
@@ -36,7 +36,7 @@
       "prettier --parser=typescript --write"
     ]
   },
-  "author": "username <email@domain.com>",
+  "author": "--username-- <--useremail-->",
   "license": "MIT",
   "devDependencies": {
     "@ls-lint/ls-lint": "^1.9.2",

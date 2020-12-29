@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 const path = require('path')
 const fs = require('fs-extra')
+const execa = require('execa')
 const { prompt } = require('enquirer')
 const args = require('minimist')(process.argv.slice(2))
+
+const run = (bin, args, opts = {}) => execa(bin, args, { stdio: 'inherit', ...opts })
 
 async function main() {
   const targetDir = args._[0] || '.'
@@ -47,13 +50,13 @@ async function main() {
   )
 
   // copy template
-  await copyTemplate(templateDir, root)
+  await copy(templateDir, root)
 
   // replace placeholder
-  if (templateType === 'library') {
-    const libraryName = path.basename(root)
-    await replaceLibraryName(libraryName, root)
-  }
+  await replace(templateType, root)
+
+  // initialize git
+  await git(root)
 
   // done
   console.log(`\nDone. Now run:\n`)
@@ -65,7 +68,7 @@ async function main() {
   console.log()
 }
 
-async function copyTemplate(templateDir, root) {
+async function copy(templateDir, root) {
   const files = await fs.readdir(templateDir)
   const excludeFiles = ['node_modules', 'dist']
   const renameFiles = { _gitignore: '.gitignore' }
@@ -79,19 +82,65 @@ async function copyTemplate(templateDir, root) {
   }
 }
 
-async function replaceLibraryName(name, root) {
-  const replaceFiles = [
-    path.join(root, 'package.json'),
-    path.join(root, 'index.js'),
-    path.join(root, 'README.md'),
-  ]
-  const placeholder = /(my-library)/ig
+async function replace(templateType, root) {
+  const projectName = path.basename(root)
+  const { stdout } = await run('git', ['config', '--list'], { cwd: root, stdio: 'pipe' })
+  const { user = {} } = parseGitConfig(stdout)
 
-  for (const file of replaceFiles) {
+  switch (templateType) {
+    case 'library':
+      await replacePlaceholder(
+        projectName,
+        /--projectname--/ig,
+        [
+          path.join(root, 'index.js'),
+        ]
+      )
+      break
+  }
+  
+  replacePlaceholder(
+    (_, m) => {
+      switch (m) {
+        case 'projectname':
+          return projectName
+        case 'username':
+          return user.name || m
+        case 'useremail':
+          return user.email || m
+      }
+    },
+    /--(\w+)--/ig,
+    [
+      path.join(root, 'package.json'),
+      path.join(root, 'README.md'),
+    ]
+  )
+}
+
+async function replacePlaceholder(str, placeholder, files) {
+  for (const file of files) {
     const content = await fs.readFile(file, { encoding: 'utf-8' })
-    const result = content.replace(placeholder, name)
+    const result = content.replace(placeholder, str)
     await fs.writeFile(file, result)
   }
+}
+
+async function git(root) {
+  await run('git', ['init', root])
+}
+
+function parseGitConfig(str) {
+  const pairs = {}
+  str.split('\n').forEach(s => {
+    const [ keys, val ] = s.split('=')
+    keys.split('.').reduce((result, key, index, array) => {
+      return result[key] = index === array.length - 1
+        ? val
+        : result[key] || {}
+    }, pairs)
+  })
+  return pairs
 }
 
 main().catch(console.error)
