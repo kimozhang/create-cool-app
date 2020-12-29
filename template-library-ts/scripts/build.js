@@ -6,7 +6,7 @@ const chalk = require('chalk')
 const args = require('minimist')(process.argv.slice(2))
 const isRelease = args.release
 const env = args.e || args.env || 'production'
-const run = (bin, args, opts) => execa(bin, args, { stdio: 'inherit', ...opts })
+const run = (bin, args, opts = {}) => execa(bin, args, { stdio: 'inherit', ...opts })
 const step = msg => console.log(chalk.bold.yellow(msg))
 
 main().catch(console.error)
