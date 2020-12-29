@@ -11,6 +11,9 @@
     "index.js",
     "template-*"
   ],
+  "keywords": [
+    "template"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kimozhang/create-cool-app.git"
