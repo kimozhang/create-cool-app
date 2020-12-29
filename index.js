@@ -72,7 +72,7 @@ async function main() {
 
 async function copy(templateDir, root) {
   const files = await fs.readdir(templateDir)
-  const excludeFiles = ['node_modules', 'dist']
+  const excludeFiles = ['node_modules', 'dist', 'yarn.lock']
   const renameFiles = { _gitignore: '.gitignore' }
   const filesToCopy = files.filter(f => !excludeFiles.includes(f))
 
