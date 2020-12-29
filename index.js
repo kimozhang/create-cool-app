@@ -58,7 +58,7 @@ async function main() {
   await replace(templateType, root)
 
   // initialize git
-  await git(root)
+  await await run('git', ['init', root], { stdio: 'pipe' })
 
   // done
   console.log(`\nDone. Now run:\n`)
@@ -76,7 +76,7 @@ async function copy(templateDir, root) {
   const renameFiles = { _gitignore: '.gitignore' }
   const filesToCopy = files.filter(f => !excludeFiles.includes(f))
 
-  for(const file of filesToCopy) {
+  for (const file of filesToCopy) {
     const targetPath = renameFiles[file]
       ? path.join(root, renameFiles[file])
       : path.join(root, file)
@@ -139,8 +139,4 @@ function parseGitConfig(str) {
     }, pairs)
   })
   return pairs
-}
-
-async function git(root) {
-  await run('git', ['init', root], { stdio: 'pipe' })
 }
