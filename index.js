@@ -45,7 +45,7 @@ async function main() {
   await replace(templateName, root)
 
   // initialize git
-  await await run('git', ['init', root], { stdio: 'pipe' })
+  await run('git', ['init', root], { stdio: 'pipe' })
 
   // done
   console.log(`\nDone. Now run:\n`)
