@@ -5,7 +5,8 @@ const execa = require('execa')
 const { prompt } = require('enquirer')
 const args = require('minimist')(process.argv.slice(2))
 
-const run = (bin, args, opts = {}) => execa(bin, args, { stdio: 'inherit', ...opts })
+const run = (bin, args, opts = {}) => 
+  execa(bin, args, { stdio: 'inherit', ...opts })
 
 main().catch(console.error)
 
