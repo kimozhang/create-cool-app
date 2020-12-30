@@ -81,8 +81,8 @@ async function replace(template, root) {
     case 'library':
     case 'library-ts':
       await replacePlaceholder(
-        projectName,
         /--projectname--/ig,
+        projectName,
         [
           path.join(root, 'index.js'),
         ]
@@ -91,6 +91,7 @@ async function replace(template, root) {
   }
   
   await replacePlaceholder(
+    /--(\w+)--/ig,
     (_, m) => {
       switch (m) {
         case 'projectname':
@@ -101,7 +102,6 @@ async function replace(template, root) {
           return user.email || m
       }
     },
-    /--(\w+)--/ig,
     [
       path.join(root, 'package.json'),
       path.join(root, 'README.md'),
@@ -109,7 +109,7 @@ async function replace(template, root) {
   )
 }
 
-async function replacePlaceholder(str, placeholder, files) {
+async function replacePlaceholder(placeholder, str, files) {
   for (const file of files) {
     const content = await fs.readFile(file, { encoding: 'utf-8' })
     const result = content.replace(placeholder, str)
