@@ -7,7 +7,7 @@ const { prompt } = require('enquirer')
 const currentVersion = require('../package.json').version
 const args = require('minimist')(process.argv.slice(2))
 
-const packageManager = /yarn/ig.test(process.env.npm_execpath) ? 'yarn' : 'npm'
+const packageManager = /yarn\.js/.test(process.env.npm_execpath) ? 'yarn' : 'npm'
 const argsDelimiter = packageManager === 'npm' ? '--' : ''
 
 const preId =
