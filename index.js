@@ -23,39 +23,26 @@ async function main() {
   }
   
   // select a template
-  const answer = await prompt([
-    {
-      type: 'select',
-      name: 'type',
-      message: 'what\'s type of template?',
-      choices: ['Library']
-    },
-    {
-      type: 'select',
-      name: 'lang',
-      message: 'Select a language',
-      choices: ['JavaScript', 'TypeScript']
-    }
-  ])
+  const answer = await prompt({
+    type: 'select',
+    name: 'template',
+    message: 'Select a template',
+    choices: [
+      'library',
+      'library-ts'
+    ]
+  })
 
   // start scaffolding project
   console.log(`\nScaffolding project in ${root}...`)
-  const langAlias = {
-    JavaScript: 'js',
-    TypeScript: 'ts'
-  }
-  const templateType = answer.type.toLowerCase()
-  const templateLang = langAlias[answer.lang] === 'ts' ? '-ts' : ''
-  const templateDir = path.join(
-    __dirname,
-    `template-${templateType}${templateLang}`
-  )
+  const templateName = answer.template
+  const templateDir = path.join(__dirname, `template-${templateName}`)
 
   // copy template
   await copy(templateDir, root)
 
   // replace placeholder
-  await replace(templateType, root)
+  await replace(templateName, root)
 
   // initialize git
   await await run('git', ['init', root], { stdio: 'pipe' })
@@ -72,7 +59,7 @@ async function main() {
 
 async function copy(templateDir, root) {
   const files = await fs.readdir(templateDir)
-  const excludeFiles = ['node_modules', 'dist', 'yarn.lock']
+  const excludeFiles = ['node_modules', 'dist', 'yarn.lock', 'package-lock.json']
   const renameFiles = { _gitignore: '.gitignore' }
   const filesToCopy = files.filter(f => !excludeFiles.includes(f))
 
@@ -84,13 +71,14 @@ async function copy(templateDir, root) {
   }
 }
 
-async function replace(templateType, root) {
+async function replace(template, root) {
   const projectName = path.basename(root)
   const { stdout } = await run('git', ['config', '--list'], { cwd: root, stdio: 'pipe' })
   const { user = {} } = parseGitConfig(stdout)
 
-  switch (templateType) {
+  switch (template) {
     case 'library':
+    case 'library-ts':
       await replacePlaceholder(
         projectName,
         /--projectname--/ig,
