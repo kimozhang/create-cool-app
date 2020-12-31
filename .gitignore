@@ -1,4 +1,4 @@
 node_modules
 dist
-template-**/yarn.lock
+template-*/yarn.lock
 .DS_Store
