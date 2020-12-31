@@ -18,7 +18,7 @@ async function main() {
     await fs.remove(path.resolve(__dirname, '../node_modules/.rts2_cache'))
   }
 
-  const target = path.basename(process.cwd())
+  const target = path.basename(path.resolve(__dirname, '..'))
   const removedDir = 'dist'
 
   step(`\nremoving ${removedDir} directory...`)
