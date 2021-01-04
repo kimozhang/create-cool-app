@@ -1,7 +1,7 @@
 {
   "name": "create-cool-app",
   "version": "1.0.7",
-  "description": "",
+  "description": "Generate automatically some common templates",
   "main": "index.js",
   "bin": {
     "create-cool-app": "index.js",
