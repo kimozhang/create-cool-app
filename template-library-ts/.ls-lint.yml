@@ -4,5 +4,5 @@ ls:
     .ts: camelCase | PascalCase
     .d.ts: camelCase
     
-  __tests:
+  __tests__:
     .spec.ts: camelCase | PascalCase
