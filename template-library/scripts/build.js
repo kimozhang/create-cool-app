@@ -8,7 +8,7 @@ const isRelease = args.release
 const env = args.e || args.env || 'production'
 const run = (bin, args, opts = {}) => 
   execa(bin, args, { stdio: 'inherit', ...opts })
-const step = (msg) => console.log(chalk.bold.yellow(msg))
+const step = msg => console.log(chalk.bold.yellow(msg))
 
 main().catch(console.error)
 
@@ -25,5 +25,9 @@ async function main() {
   await run('rimraf', [removedDir])
 
   step(`\nRolling up for ${target}...`)
-  await run('rollup', ['-c', '--environment', [`NODE_ENV:${env}`].join(',')])
+  await run('rollup', [
+    '-c', 
+    '--environment', 
+    [`NODE_ENV:${env}`].join(',')
+  ])
 }

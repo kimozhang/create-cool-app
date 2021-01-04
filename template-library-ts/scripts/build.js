@@ -27,6 +27,10 @@ async function main() {
   step(`\nRolling up for ${target}...`)
   await run(
     'rollup',
-    ['-c', '--environment', [`NODE_ENV:${env}`].join(',')]
+    [
+      '-c', 
+      '--environment', 
+      [`NODE_ENV:${env}`].join(',')
+    ]
   )
 }

@@ -24,14 +24,14 @@ const versionIncrements = [
   ...(preId ? ['prepatch', 'preminor', 'premajor', 'prerelease'] : []),
 ]
 
-const inc = (i) => semver.inc(currentVersion, i, preId)
-const bin = (name) => path.resolve(__dirname, '../node_modules/.bin/' + name)
+const inc = i => semver.inc(currentVersion, i, preId)
+const bin = name => path.resolve(__dirname, '../node_modules/.bin/' + name)
 const run = (bin, args, opts = {}) =>
   execa(bin, args, { stdio: 'inherit', ...opts })
 const dryRun = (bin, args, opts = {}) =>
   console.log(chalk.blue(`[dryrun] ${bin} ${args.join(' ')}`), opts)
 const runIfNotDry = isDryRun ? dryRun : run
-const step = (msg) => console.log(chalk.cyan(msg))
+const step = msg => console.log(chalk.cyan(msg))
 
 async function main() {
   let targetVersion = args._[0]
