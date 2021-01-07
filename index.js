@@ -30,7 +30,8 @@ async function main() {
     message: 'Select a template',
     choices: [
       'library',
-      'library-ts'
+      'library-ts',
+      'h5'
     ]
   })
 
