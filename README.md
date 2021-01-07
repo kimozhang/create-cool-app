@@ -12,5 +12,6 @@ $ yarn create cool-app <project-name>
 
 ## List of template
 
-- template-library
-- template-library-ts
+- library
+- library-ts
+- h5
