@@ -31,7 +31,7 @@ async function main() {
     choices: [
       'library',
       'library-ts',
-      'h5'
+      'h5-pure'
     ]
   })
 
