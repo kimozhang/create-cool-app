@@ -14,4 +14,4 @@ $ yarn create cool-app <project-name>
 
 - library
 - library-ts
-- h5
+- h5-pure
