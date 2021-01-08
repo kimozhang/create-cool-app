@@ -15,7 +15,7 @@ module.exports = {
   // host: 'local.domain.com',
   // open: 'external',
   server: {
-    baseDir: './html',
+    baseDir: './pages',
     middleware: [ ...proxyMiddlewares ],
     directory: true
   },
