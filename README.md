@@ -14,4 +14,3 @@ $ yarn create cool-app <project-name>
 
 - library
 - library-ts
-- multi-page
